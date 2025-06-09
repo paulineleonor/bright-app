@@ -9,8 +9,7 @@ import { Card } from "./Card";
 import { Completed } from "./Completed";
 import { QuestionFlow } from "./QuestionFlow";
 
-export const PageLayout: FunctionComponent<PropsWithChildren> = ({
-  children,
+export const PageLayout: FunctionComponent = ({
 }) => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [loading, setLoading] = useState(true);

@@ -61,7 +61,7 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({ questions, controlle
 
   return (
     <div className="w-full mx-auto bg-white border border-gray-300 rounded-lg shadow-sm overflow-hidden">
-      <div className="relative h-20 flex items-center p-6 justify-between">
+      <div className="relative h-20 flex items-center p-6">
         <p>Your progress - {percentageComplete}%</p>
         <div className="flex items-center justify-between px-6">
           <div className="relative h-[10px] w-52 bg-gray-200 rounded-full overflow-hidden">
