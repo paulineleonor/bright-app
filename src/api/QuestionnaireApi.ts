@@ -1,8 +1,10 @@
+import { Answer } from "../data/models/Questionnaire";
+
 export type QuestionsApiResponse = {
   ok: boolean;
   questions: {
     id: string;
-    title: string;
+    text: string;
   }[];
 };
 
@@ -26,6 +28,18 @@ export class QuestionnaireApi {
     const data = await res.json();
 
     return data;
+  }
+
+  static async submitAnswers(user: string, body: { answers: Answer[] }) {
+    const res = await fetch(
+      `https://fhc-api.onrender.com/submissions?user=${user}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      }
+    );
+    return await res.json();
   }
 
   static async loadLatestResult(

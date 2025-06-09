@@ -1,13 +1,15 @@
-import './App.css'
-import { PageLayout } from './components/PageLayout'
+import "./App.css";
+import { PageLayout } from "./components/PageLayout";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 function App() {
-
   return (
-    <>
-      <PageLayout/>
-    </>
-  )
+    <Router>
+      <Routes>
+        <Route path="/" element={<PageLayout />} />
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;

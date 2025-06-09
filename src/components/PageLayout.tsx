@@ -1,8 +1,12 @@
 import React, { PropsWithChildren, useEffect, useState } from "react";
 import { FunctionComponent } from "react";
+import { useSearchParams } from "react-router-dom";
 import { QuestionnaireController } from "../data/controllers/QuestionnaireController";
+import { mockUsers } from "../data/controllers/UserController";
 import { Question } from "../data/models/Questionnaire";
+import { User } from "../data/models/User";
 import { Card } from "./Card";
+import { Completed } from "./Completed";
 import { QuestionFlow } from "./QuestionFlow";
 
 export const PageLayout: FunctionComponent<PropsWithChildren> = ({
@@ -11,12 +15,30 @@ export const PageLayout: FunctionComponent<PropsWithChildren> = ({
   const [questions, setQuestions] = useState<Question[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const user = searchParams.get("user");
+  const [controller] = useState(new QuestionnaireController());
 
   useEffect(() => {
-    const controller = new QuestionnaireController();
+    if (!user) {
+      setSearchParams({ user: "batman" });
+    }
+  }, [user, setSearchParams]);
+
+  useEffect(() => {
+    if (!user) return;
+
+    const foundUser = mockUsers.find((u) => u.name === user);
+    if (!foundUser) {
+      setError("User not found.");
+      return;
+    }
+
+    setCurrentUser(foundUser);
 
     controller
-      .load("user123") // Replace with actual user ID
+      .load(user)
       .then(() => {
         const loadedQuestions = controller.getQuestions();
         setQuestions(loadedQuestions);
@@ -27,7 +49,7 @@ export const PageLayout: FunctionComponent<PropsWithChildren> = ({
         setError("Could not load questionnaire.");
         setLoading(false);
       });
-  }, []);
+  }, [user]);
 
   const cards = [
     {
@@ -93,8 +115,10 @@ export const PageLayout: FunctionComponent<PropsWithChildren> = ({
         </p>
       </div>
 
-      <div className="px-20 pt-10">
-        {questions.length > 0 && <QuestionFlow questions={questions} />}
+      {/* add loading and error components  */}
+      <div className="px-20 py-10">
+        {currentUser && !currentUser.dateCompleted && questions.length > 0 && <QuestionFlow questions={questions} controller={controller} />}
+        {currentUser && currentUser.dateCompleted && <Completed date={currentUser.dateCompleted} />}
       </div>
     </>
   );
